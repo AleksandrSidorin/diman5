@@ -1,23 +1,18 @@
 clc; clear;
-%close all;
 
-%% Variables initialization
-
-% initialize constant parameters
 l1 = 1;
 l2 = 0.5;
 
-m1 = 3;
-m2 = 2;
-m3 = 0.5;
+m1 = 8;
+m2 = 3;
+m3 = 1;
 
 % initialize joint variables
 syms t real
 q1 = 2*sin(t);
-q2 = 1*cos(2*t);
-q3 = 1*sin(3*t);
+q2 = cos(t);
+q3 = 3*sin(t);
 
-% inertia tensors
 I1 = [(1/12)*m1*l1^2 0 0;
        0 (1/12)*m1*l1^2 0;
        0 0 0];
@@ -29,8 +24,6 @@ I2 = [0 0 0;
 I3 = [(1/12)*m3*q3^2 0 0;
        0 (1/12)*m3*q3^2 0;
        0 0 0];
-
-%% Forward Kinematics
 
 % T = trotz(theta)*transl(0,0,d)*transl(a,0,0)*trotx(alpha);
 T01 = trotz(q1) * transl(0, 0, l1)*trotx(pi/2);
@@ -57,13 +50,10 @@ rc01 = r01/2;
 rc12 = r12/2;
 rc23 = r23/2;
 
-%% Forward
 q = [q1 q2 q3];
 dq = [diff(q1,t), diff(q2,t), diff(q3,t)];
 ddq = [diff(q1,t,2), diff(q2,t,2), diff(q3,t,2)];
-
 z0 = [0 0 1]';
-
 omega0 = [0 0 0]';
 domega0 = [0 0 0]';
 
@@ -106,46 +96,41 @@ g1 = R01'*g0;
 g2 = R12'*g1;
 g3 = R23'*g2;
 
-%% Some plots
-
 time = 0:0.01:10;
 
-myplot(1, dp1, time, 'Time', 'End-effector velocity', '$\dot{p}_x$', '$\dot{p}_y$', '$\dot{p}_z$', 'dp1')
-myplot(2, dp2, time, 'Time', 'End-effector velocity', '$\dot{p}_x$', '$\dot{p}_y$', '$\dot{p}_z$', 'dp2')
-myplot(3, dp3, time, 'Time', 'End-effector velocity', '$\dot{p}_x$', '$\dot{p}_y$', '$\dot{p}_z$', 'dp3')
+myplot(1, dp1, time, 'Time', 'End-effector velocity')
+myplot(2, dp2, time, 'Time', 'End-effector velocity')
+myplot(3, dp3, time, 'Time', 'End-effector velocity')
 
-myplot(4, dpc1, time, 'Time', 'Center of mass velocity', '$\dot{p}_{Cx}$', '$\dot{p}_{Cy}$', '$\dot{p}_{Cz}$', 'dpc1')
-myplot(5, dpc2, time, 'Time', 'Center of mass velocity', '$\dot{p}_{Cx}$', '$\dot{p}_{Cy}$', '$\dot{p}_{Cz}$', 'dpc2')
-myplot(6, dpc3, time, 'Time', 'Center of mass velocity', '$\dot{p}_{Cx}$', '$\dot{p}_{Cy}$', '$\dot{p}_{Cz}$', 'dpc3')
+myplot(4, dpc1, time, 'Time', 'Center of mass velocity')
+myplot(5, dpc2, time, 'Time', 'Center of mass velocity')
+myplot(6, dpc3, time, 'Time', 'Center of mass velocity')
 
-myplot(7, ddp1, time, 'Time', 'End-effector acceleration', '$\ddot{p}_x$', '$\ddot{p}_y$', '$\ddot{p}_z$', 'ddp1')
-myplot(8, ddp2, time, 'Time', 'End-effector acceleration', '$\ddot{p}_x$', '$\ddot{p}_y$', '$\ddot{p}_z$', 'ddp2')
-myplot(9, ddp3, time, 'Time', 'End-effector acceleration', '$\ddot{p}_x$', '$\ddot{p}_y$', '$\ddot{p}_z$', 'ddp3')
+myplot(7, ddp1, time, 'Time')
+myplot(8, ddp2, time, 'Time')
+myplot(9, ddp3, time, 'Time')
 
-myplot(10, ddpc1, time, 'Time', 'Center of mass acceleration', '$\ddot{p}_{Cx}$', '$\ddot{p}_{Cy}$', '$\ddot{p}_{Cz}$', 'ddpc1')
-myplot(11, ddpc2, time, 'Time', 'Center of mass acceleration', '$\ddot{p}_{Cx}$', '$\ddot{p}_{Cy}$', '$\ddot{p}_{Cz}$', 'ddpc2')
+myplot(10, ddpc1, time, 'Time')
+myplot(11, ddpc2, time, 'Time')
 myplot(12, ddpc3, time, 'Time', 'Center of mass acceleration', '$\ddot{p}_{Cx}$', '$\ddot{p}_{Cy}$', '$\ddot{p}_{Cz}$', 'ddpc3')
 
-myplot(13, omega1, time, 'Time', 'Angular speed', '$\omega_{x}$', '$\omega_{y}$', '$\omega_{z}$', 'omega1')
-myplot(14, omega2, time, 'Time', 'Angular speed', '$\omega_{x}$', '$\omega_{y}$', '$\omega_{z}$', 'omega2')
-myplot(15, omega3, time, 'Time', 'Angular speed', '$\omega_{x}$', '$\omega_{y}$', '$\omega_{z}$', 'omega3')
+myplot(13, omega1, time, 'Time')
+myplot(14, omega2, time, 'Time')
+myplot(15, omega3, time, 'Time')
 
-myplot(16, domega1, time, 'Time', 'Angular acceleration', '$\dot{\omega}_{x}$', '$\dot{\omega}_{y}$', '$\dot{\omega}_{z}$', 'domega1')
-myplot(17, domega2, time, 'Time', 'Angular acceleration', '$\dot{\omega}_{x}$', '$\dot{\omega}_{y}$', '$\dot{\omega}_{z}$', 'domega2')
-myplot(18, domega3, time, 'Time', 'Angular acceleration', '$\dot{\omega}_{x}$', '$\dot{\omega}_{y}$', '$\dot{\omega}_{z}$', 'domega3')
+myplot(16, domega1, time, 'Time')
+myplot(17, domega2, time, 'Time')
+myplot(18, domega3, time, 'Time')
 
-myplot(19, centrifugal1, time, 'Time', 'Centrifugal term', '$x$', '$y$', '$z$', 'centrifugal1')
-myplot(20, centrifugal2, time, 'Time', 'Centrifugal term', '$x$', '$y$', '$z$', 'centrifugal2')
-myplot(21, centrifugal3, time, 'Time', 'Centrifugal term', '$x$', '$y$', '$z$', 'centrifugal3')
+myplot(19, centrifugal1, time, 'Time', 'Centrifugal term')
+myplot(20, centrifugal2, time, 'Time', 'Centrifugal term')
+myplot(21, centrifugal3, time, 'Time', 'Centrifugal term')
 
-myplot(22, coriolis3, time, 'Time', 'Coriolis term', '$x$', '$y$', '$z$', 'coriolis3')
+myplot(22, coriolis3, time, 'Time')
 
-myplot(23, g1, time, 'Time', 'Gravity term', '$g_x$', '$g_y$', '$g_z$', 'g1')
-myplot(24, g2, time, 'Time', 'Gravity term', '$g_x$', '$g_y$', '$g_z$', 'g2')
-myplot(25, g3, time, 'Time', 'Gravity term', '$g_x$', '$g_y$', '$g_z$', 'g3')
-
-
-%% Backward
+myplot(23, g1, time, 'Time', 'Gravity term')
+myplot(24, g2, time, 'Time', 'Gravity term')
+myplot(25, g3, time, 'Time', 'Gravity term')
 
 f3 = m3*ddpc3 - m3*g3;
 f2 = R23*f3 + m2*ddpc2 - m2*g2;
@@ -155,24 +140,22 @@ mu3 = -cross(f3, rc23) + I3*domega3 + cross(omega3, I3*omega3);
 mu2 = -cross(f2, rc12) + R23*mu3 + cross(R23*f3, -rc12) + I2*domega2 + cross(omega2, I2*omega2);
 mu1 = -cross(f1, rc01) + R12*mu2 + cross(R12*f2, -rc01) + I1*domega1 + cross(omega1, I1*omega1);
 
-myplot(26, f1, time, 'Time', 'Force', '$f_x$', '$f_y$', '$f_z$', 'f1')
-myplot(27, f2, time, 'Time', 'Force', '$f_x$', '$f_y$', '$f_z$', 'f2')
-myplot(28, f3, time, 'Time', 'Force', '$f_x$', '$f_y$', '$f_z$', 'f3')
+myplot(26, f1, time, 'Time', 'Force')
+myplot(27, f2, time, 'Time', 'Force')
+myplot(28, f3, time, 'Time', 'Force')
 
-myplot(29, mu1, time, 'Time', 'Force', '$\mu_x$', '$\mu_y$', '$\mu_z$', 'mu1')
-myplot(30, mu2, time, 'Time', 'Force', '$\mu_x$', '$\mu_y$', '$\mu_z$', 'mu2')
-myplot(31, mu3, time, 'Time', 'Force', '$\mu_x$', '$\mu_y$', '$\mu_z$', 'mu3')
+myplot(29, mu1, time, 'Time', 'Force')
+myplot(30, mu2, time, 'Time', 'Force')
+myplot(31, mu3, time, 'Time', 'Force')
 
-%% Generic forces
 tau1 = dot(mu1, R01'*z0);
 tau2 = dot(mu2, R12'*z0);
 tau3 = dot(f3, R23'*z0);
 tau = [tau1 tau2 tau3]';
 
-myplot(32, tau, time, 'Time', 'Generic forces', '$\tau_1$', '$\tau_2$', '$\tau_3$', 'tau')
-myplot(33, q', time, 'Time', 'Joint variables', '$q_1$', '$q_2$', '$q_3$', 'q')
+myplot(32, tau, time, 'Time', 'Generic forces')
+myplot(33, q', time, 'Time', 'Joint variables')
 
-%% Centrifugal term
 f_centrifugal3 = m3*centrifugal3;
 f_centrifugal2 = m2*centrifugal2;
 f_centrifugal1 = m1*centrifugal1;
@@ -185,9 +168,8 @@ tau1 = dot(mu_centrifugal1, R01'*z0);
 tau2 = dot(mu_centrifugal2, R12'*z0);
 tau3 = dot(f_centrifugal3, R23'*z0);
 tau = [tau1 tau2 tau3]';
-myplot(34, tau, time, 'Time', 'Сentrifugal term', '$\tau_1$', '$\tau_2$', '$\tau_3$', 'tau_centrifugal')
+myplot(34, tau, time, 'Time')
 
-%% Coriolis term
 f_coriolis3 = m3*coriolis3;
 f_coriolis2 = R23*f3;
 f_coriolis1 = R12*f2;
@@ -202,7 +184,6 @@ tau3 = dot(f_coriolis3, R23'*z0);
 tau = [tau1 tau2 tau3]';
 myplot(35, tau, time, 'Time', 'Сoriolis term', '$\tau_1$', '$\tau_2$', '$\tau_3$', 'tau_coriolis')
 
-%% Gravity term
 f_gravity3 = -m3*g3;
 f_gravity2 = R23*f_gravity3 - m2*g2;
 f_gravity1 = R12*f_gravity2 - m1*g1;
@@ -215,4 +196,4 @@ tau1 = dot(mu_gravity1, R01'*z0);
 tau2 = dot(mu_gravity2, R12'*z0);
 tau3 = dot(f_gravity3, R23'*z0);
 tau = [tau1 tau2 tau3]';
-myplot(36, tau, time, 'Time', 'Gravity term', '$\tau_1$', '$\tau_2$', '$\tau_3$', 'tau_gravity')
+myplot(36, tau, time, 'Time', 'Gravity term')
