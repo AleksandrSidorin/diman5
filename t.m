@@ -1,15 +1,13 @@
-function myplot(number, value, time, xname, yname, legend1, legend2, legend3, png_name)
-%MYPLOT Summary of this function goes here
-%   Detailed explanation goes here
+function t(number, value, time, xname, yname, legend1, legend2, legend3, png_name)
 syms t real
 value_time = double(subs(value, {t}, {time}));
 fig = figure(number);
-set(gcf,'color','w','Position',[0 0 800 600]);
+set(gcf,'color','w','Position',[0 0 70 50]);
 plot(time, value_time, 'LineWidth', 2)
 grid on
 xlabel(xname)
 ylabel(yname)
-legend(legend1, legend2, legend3, 'interpreter', 'latex', 'Fontsize', 14)
+legend(legend1, legend2, legend3, 'interpreter', 'latex', 'Fontsize')
 set(gca,'FontSize',16)
 frame = getframe(fig);
 im = frame2im(frame);
